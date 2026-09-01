@@ -1,0 +1,49 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "trip_id": {
+        "type": "keyword"
+      },
+      "route_desc": {
+        "type": "text"
+      },
+      "airline": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "dep_airport": {
+        "type": "keyword"
+      },
+      "arr_airport": {
+        "type": "keyword"
+      },
+      "seat_class": {
+        "type": "keyword"
+      },
+      "out_dep_time": {
+        "type": "date"
+      },
+      "stay_nights": {
+        "type": "integer"
+      },
+      "total_price": {
+        "type": "integer"
+      },
+      "is_direct": {
+        "type": "boolean"
+      },
+      "tags": {
+        "type": "keyword"
+      }
+    }
+  }
+}
