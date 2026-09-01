@@ -1,0 +1,132 @@
+import json
+import random
+from datetime import datetime, timedelta
+
+INDEX_NAME = "flights"
+DOCUMENT_COUNT = 10000
+SEED = 20260901
+ID_PREFIX = "TRIP"
+
+random.seed(SEED)
+
+AIRLINES = [
+    "대한항공",
+    "아시아나항공",
+    "제주항공",
+    "진에어",
+    "티웨이항공"
+]
+
+SEAT_CLASSES = [
+    "economy",
+    "business",
+    "first"
+]
+
+TAGS = [
+    "특가",
+    "수하물포함",
+    "변경가능",
+    "할인",
+    "추천"
+]
+
+START_DATE = datetime(2026, 9, 1)
+END_DATE = datetime(2026, 9, 30, 23, 59, 59)
+
+
+def random_date():
+    seconds = int((END_DATE - START_DATE).total_seconds())
+    date = START_DATE + timedelta(
+        seconds=random.randint(0, seconds)
+    )
+    return date.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def create_document(number):
+    trip_id = f"{ID_PREFIX}-{number:05d}"
+
+    is_direct = random.choices(
+        [True, False],
+        weights=[70, 30]
+    )[0]
+
+    if is_direct:
+        route_desc = "인천 도쿄 왕복 직항"
+    else:
+        route_desc = "인천 도쿄 왕복 경유"
+
+    seat_class = random.choices(
+        SEAT_CLASSES,
+        weights=[70, 20, 10]
+    )[0]
+
+    return {
+        "trip_id": trip_id,
+        "route_desc": route_desc,
+        "airline": random.choice(AIRLINES),
+        "dep_airport": "ICN",
+        "arr_airport": "NRT",
+        "seat_class": seat_class,
+        "out_dep_time": random_date(),
+        "stay_nights": random.randint(1, 10),
+        "total_price": random.randint(300000, 1200000),
+        "is_direct": is_direct,
+        "tags": random.sample(
+            TAGS,
+            random.randint(1, 2)
+        )
+    }
+
+
+documents = []
+
+for i in range(1, DOCUMENT_COUNT + 1):
+    documents.append(create_document(i))
+
+
+with open(
+    "data/flights-1000.json",
+    "w",
+    encoding="utf-8"
+) as file:
+
+    json.dump(
+        documents,
+        file,
+        ensure_ascii=False,
+        indent=2
+    )
+
+
+with open(
+    "data/flights-1000.ndjson",
+    "w",
+    encoding="utf-8"
+) as file:
+
+    for document in documents:
+
+        action = {
+            "index": {
+                "_index": INDEX_NAME,
+                "_id": document["trip_id"]
+            }
+        }
+
+        file.write(
+            json.dumps(
+                action,
+                ensure_ascii=False
+            ) + "\n"
+        )
+
+        file.write(
+            json.dumps(
+                document,
+                ensure_ascii=False
+            ) + "\n"
+        )
+
+
+print(f"{DOCUMENT_COUNT}건 생성 완료")

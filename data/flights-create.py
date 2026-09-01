@@ -3,7 +3,7 @@ import random
 from datetime import datetime, timedelta
 
 INDEX_NAME = "flights"
-DOCUMENT_COUNT = 1000
+DOCUMENT_COUNT = 10000
 SEED = 20260901
 ID_PREFIX = "TRIP"
 
@@ -15,6 +15,15 @@ AIRLINES = [
     "제주항공",
     "진에어",
     "티웨이항공"
+]
+
+ROUTES = [
+    ("NRT", "도쿄"),
+    ("KIX", "오사카"),
+    ("TPE", "타이베이"),
+    ("HKG", "홍콩"),
+    ("BKK", "방콕"),
+    ("SIN", "싱가포르")
 ]
 
 SEAT_CLASSES = [
@@ -51,10 +60,12 @@ def create_document(number):
         weights=[70, 30]
     )[0]
 
+    arr_airport, arr_city = random.choice(ROUTES)
+
     if is_direct:
-        route_desc = "인천 도쿄 왕복 직항"
+        route_desc = f"인천 {arr_city} 왕복 직항"
     else:
-        route_desc = "인천 도쿄 왕복 경유"
+        route_desc = f"인천 {arr_city} 왕복 경유"
 
     seat_class = random.choices(
         SEAT_CLASSES,
@@ -66,7 +77,7 @@ def create_document(number):
         "route_desc": route_desc,
         "airline": random.choice(AIRLINES),
         "dep_airport": "ICN",
-        "arr_airport": "NRT",
+        "arr_airport": arr_airport,
         "seat_class": seat_class,
         "out_dep_time": random_date(),
         "stay_nights": random.randint(1, 10),
@@ -86,7 +97,7 @@ for i in range(1, DOCUMENT_COUNT + 1):
 
 
 with open(
-    "data/flights-1000.json",
+    f"flights-{DOCUMENT_COUNT}.json",
     "w",
     encoding="utf-8"
 ) as file:
@@ -100,7 +111,7 @@ with open(
 
 
 with open(
-    "data/flights-1000.ndjson",
+    f"flights-{DOCUMENT_COUNT}.ndjson",
     "w",
     encoding="utf-8"
 ) as file:
