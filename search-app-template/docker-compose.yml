@@ -1,0 +1,15 @@
+services:
+  search-app:
+    build:
+      context: .
+    ports:
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
+    environment:
+      PORT: 3000
+      ES_URL: ${ES_URL:-https://host.docker.internal:9200}
+      ES_USERNAME: ${ES_USERNAME:-elastic}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:?ELASTIC_PASSWORD가 필요합니다}
+      ES_TLS_REJECT_UNAUTHORIZED: ${ES_TLS_REJECT_UNAUTHORIZED:-false}
+    volumes:
+      - ./config:/app/config:ro
+    restart: unless-stopped

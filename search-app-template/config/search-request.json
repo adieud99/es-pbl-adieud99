@@ -1,0 +1,39 @@
+{
+  "_source": [
+    "trip_id",
+    "route_desc",
+    "airline",
+    "seat_class",
+    "arr_airport",
+    "total_price",
+    "stay_nights",
+    "out_dep_time"
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "multi_match": {
+            "query": "{{searchText}}",
+            "fields": ["route_desc^3", "airline"]
+          }
+        }
+      ],
+      "filter": [
+        { "range": { "total_price": { "lte": 900000 } } }
+      ]
+    }
+  },
+  "highlight": {
+    "pre_tags": ["<mark>"],
+    "post_tags": ["</mark>"],
+    "fields": {
+      "route_desc": {},
+      "airline": {}
+    }
+  },
+  "sort": [
+    { "_score": "desc" },
+    { "total_price": "asc" }
+  ]
+}

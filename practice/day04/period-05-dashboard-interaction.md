@@ -6,7 +6,7 @@
 
 ### 배치 기록
 
-- Dashboard 제목: `수업` (저장하지 않아 현재 Kibana에 남아 있지 않다. 문제 4 참고)
+- Dashboard 제목: `D4 공통 상품 Dashboard - adieud99`
 - 첫 행 패널: `전체 상품 수` Metric, `카테고리별 상품 수` Bar
 - 둘째 행 패널: `브랜드별 상품 수와 평균 가격` Table, `재고 상태 비율` Donut,
   `가격 구간별 상품 수` Bar
@@ -20,7 +20,7 @@
 - 제목이 비어 있던 패널과 수정 결과: Metric 패널이 기본값 `Count of records`로 남아
   있었다. `전체 상품 수`로 바꿨다. 차트 이름이 아니라 그 패널이 답하는 내용을 제목으로
   써야 한다.
-- 캡처 파일: `evidence/day-04/common-dashboard.png`
+- 캡처 파일: `picture/products.png`
 
 배치 원칙은 **위에서 아래로 읽으면 질문이 좁아지게** 잡았다. 첫 행에서 전체 규모를 보고,
 가운데에서 그룹별로 나눠 보고, 아래에서 시간 흐름을 본다.
@@ -53,7 +53,20 @@
 
 - `Any` 복구 후 Metric: **10,000**
 - 정상 여부: **정상**
-- 캡처 파일: `evidence/day-04/common-dashboard.png`
+- 캡처 파일: `picture/products.png`(전체),
+  `picture/products-control.png`(전자기기 적용)
+
+화면에서 읽은 값을 집계와 대조했다.
+
+| 패널 | 화면(전자기기) | `_count`/집계 | 일치 |
+|---|---:|---:|---|
+| Metric | 1,250 | 1,250 | O |
+| 브랜드 1위 | MobiCore 271 (231,226) | 271 / 231,226 | O |
+| 가격 구간 | 87 / 132 / 143 / 165 / **723** | 87 / 132 / 143 / 165 / 723 | O |
+| 재고 Donut false | 14.8% | 185 / 1,250 = 14.8% | O |
+
+  가격 분포가 완전히 뒤집힌다. 전체에서는 5만원 미만이 3,621건으로 최다인데, 전자기기만
+  보면 20만원 이상이 723건으로 최다다. 카테고리를 좁히면 그 카테고리의 가격대가 드러난다.
 
 ## (진단·필수) 문제 3 — Control·Filter·KQL을 구분하고 초기화
 
@@ -75,7 +88,7 @@ GET /flights/_count { "query": { "term":  { "seat_class": "business" } } }      
 GET /flights/_count { "query": { "range": { "total_price": { "gte": 600000 } } } } → 6,713
 ```
 
-Filter를 걸었을 때 함께 변한 패널도 확인했다(`p05-q03-filter.png`).
+Filter를 걸었을 때 함께 변한 패널도 확인했다(`flights-filter.png`).
 
 | 패널 | 전체 | business만 |
 |---|---|---|
@@ -112,7 +125,7 @@ Filter를 걸었을 때 함께 변한 패널도 확인했다(`p05-q03-filter.png
   놓친다.** 문제지가 "한 방식을 확인한 뒤 반드시 지우고 다음으로 이동합니다"라고 못박은
   이유를 몸으로 확인했다. 조건을 지우고 다시 하니 정확히 2,004가 나왔다.
 
-- 모든 조건 제거 후 전체값: **10,000** (`p05-q03-baseline.png`)
+- 모든 조건 제거 후 전체값: **10,000** (`flights.png`)
 - `Filter for value` 문구가 없을 때 확인한 filter pill과 변한 패널: 차트 조각을 클릭했을 때
   툴팁이 안 떠도 클릭하면 상단에 알약이 생긴다. 알약이 생겼는지로 판단하면 되고, 생겼다면
   그 조건에 걸린 모든 패널이 함께 변한다.
@@ -120,51 +133,44 @@ Filter를 걸었을 때 함께 변한 패널도 확인했다(`p05-q03-filter.png
 
 | 파일 | 상태 |
 |---|---|
-| `picture/p05-q03-baseline.png` | 조건 없음, 10,000 |
-| `picture/p05-q03-kql.png` | KQL `total_price >= 600000`, 6,713 |
-| `picture/p05-q03-filter.png` | Filter `seat_class: business`, 2,004 |
+| `picture/flights.png` | 조건 없음, 10,000 |
+| `picture/flights-kql.png` | KQL `total_price >= 600000`, 6,713 |
+| `picture/flights-filter.png` | Filter `seat_class: business`, 2,004 |
 
 ## (공통·필수) 문제 4 — 목요일 종료용 저장·재열기
 
 ### 저장·복구 기록
 
-- 실제 저장 이름: **저장되지 않았다.**
-- 저장 시각: 없음
-- 다시 열기 성공 여부: **실패**
-- 패널 수 / Control 초기값 / KQL·filter 상태 / Metric 값: 확인 불가
+- 실제 저장 이름: **`D4 공통 상품 Dashboard - adieud99`**
+- 저장 시각: 2026-09-03
+- 다시 열기 성공 여부: **성공**
+- 패널 수: 6개
+- Control 초기값: `Any`
+- KQL/filter 상태: 둘 다 없음
+- Metric 값: **10,000**
+- 다시 열었을 때 달라진 항목: 없다. 패널 6개, control 초기값, 시간 범위가 그대로 복구됐다.
+  `timeRestore`를 켜고 저장해서 절대 범위(2025-08-01 ~ 2026-09-01)까지 같이 복구된다.
+- 전체 화면 캡처: `picture/products.png`
 
-Saved Objects API로 확인한 결과다.
+**처음에는 저장을 안 했었다.** 뒤늦게 Saved Objects를 확인해보니 이런 상태였다.
 
 ```http
-GET /api/saved_objects/_find?type=dashboard   → 총 1개 (fligths dashboards)
-GET /api/saved_objects/_find?type=index-pattern → 총 1개 (flights*)
-GET /api/saved_objects/_find?type=lens        → 총 0개
+GET /api/saved_objects/_find?type=dashboard     → 1개 (개인 flights만)
+GET /api/saved_objects/_find?type=index-pattern → 1개 (flights* 만)
+GET /api/saved_objects/_find?type=lens          → 0개
 ```
 
-- 확인 당시 남아 있던 Dashboard: `fligths dashboards` (개인 flights) 하나뿐
-- 확인 당시 남아 있던 Data View: `flights*` 하나뿐
-- **`products` Data View도, 공통 Dashboard도, 저장된 Lens도 없었다.**
+`products` Data View도 공통 Dashboard도 없었다. 편집 모드에서 화면만 만들고 저장 없이
+끝냈던 것이다. 그래서 초기에 찍어둔 공통 캡처(997건 상태)가 어떤 조건에서 나온 값인지
+끝내 확인하지 못했다. 화면을 다시 열 방법이 없었기 때문이다.
 
-공통 실습은 편집 모드에서 화면만 만들고 저장 없이 끝난 것으로 보인다. 캡처
-(`evidence/day-04/common-dashboard.png`)는 그때 찍은 화면이라 값이 남아 있지만, 그 화면을
-다시 열어 확인할 방법이 없다. 그래서 그 캡처의 997건이 어떤 조건에서 나온 값인지
-지금도 확인하지 못했다.
+이후 Data View `쇼핑몰 상품 데이터`(index pattern `products`, time field `created_at`)를
+만들고 6패널과 control을 다시 구성해 저장했다. 지금은 URL로 다시 열어 같은 값이 나오는
+것을 확인했다.
 
-**이후 조치.** 1교시 실습을 마저 하려고 Data View `쇼핑몰 상품 데이터`
-(index pattern `products`, time field `created_at`)를 새로 만들었다. 이제 Discover에서
-`products`를 열 수 있고, 1교시 문제 1~3의 캡처는 이 Data View로 다시 찍은 것이다.
-Dashboard는 아직 저장하지 않았다.
-
-- 다시 열었을 때 달라진 항목: 해당 없음
-
-**다음부터 할 것.** Dashboard는 패널을 다 만든 직후에 저장한다. 저장하지 않으면 편집
-상태는 브라우저를 닫는 순간 사라지고, 캡처만 남아 나중에 검증이 불가능해진다.
-저장할 때 `Store time with dashboard`를 켜야 시간 범위까지 복구된다. 이번에 개인
-Dashboard는 저장했기 때문에 URL(`/app/dashboards#/view/2ee36d5d-...`)로 다시 열어
-재현할 수 있었다.
-
-- 전체 화면 캡처: `evidence/day-04/common-dashboard.png` (당시 화면),
-  `picture/p05-q03-baseline.png` (개인 Dashboard 재열기 성공)
+**배운 것.** 저장하지 않으면 캡처만 남고 검증이 불가능해진다. 숫자가 이상해도 원인을
+추적할 수 없다. 패널을 만들면 바로 저장하고, 시간 범위를 함께 저장하려면
+`Store time with dashboard`를 켜야 한다.
 
 ## (선택 도전) 문제 5 — 30초 사용성 테스트
 

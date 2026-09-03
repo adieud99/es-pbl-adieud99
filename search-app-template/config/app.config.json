@@ -1,0 +1,19 @@
+{
+  "appTitle": "해외 왕복 항공권 검색",
+  "appDescription": "노선과 항공사로 왕복 항공권 상품을 검색합니다.",
+  "index": "flights",
+  "searchPlaceholder": "도착지나 항공사를 입력하세요 (예: 도쿄 직항)",
+  "exampleQueries": ["도쿄 직항", "대한항공", "방콕"],
+  "pageSize": 12,
+  "resultFields": {
+    "title": "route_desc",
+    "description": "airline",
+    "badge": "seat_class",
+    "meta": [
+      { "label": "총가격", "field": "total_price", "format": "number", "suffix": "원" },
+      { "label": "숙박", "field": "stay_nights", "format": "number", "suffix": "박" },
+      { "label": "도착지", "field": "arr_airport" },
+      { "label": "출발일", "field": "out_dep_time" }
+    ]
+  }
+}

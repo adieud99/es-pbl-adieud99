@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Elasticsearch 5일 PBL 검색 서비스 템플릿" />
+    <title>나의 PBL 검색 서비스</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">ES</div>
+      <div>
+        <p class="eyebrow">5 DAYS PBL · SEARCH DEMO</p>
+        <h1 id="app-title">나의 PBL 검색 서비스</h1>
+      </div>
+      <span class="connection" id="connection-state">연결 확인 중</span>
+    </header>
+
+    <main>
+      <section class="search-panel" aria-labelledby="app-title">
+        <p id="app-description">내가 설계한 인덱스와 Search API를 브라우저에서 확인합니다.</p>
+        <form id="search-form" role="search">
+          <label class="sr-only" for="search-input">검색어</label>
+          <input id="search-input" name="q" type="search" maxlength="100" autocomplete="off" required />
+          <button type="submit">검색</button>
+        </form>
+        <div class="examples" id="example-queries" aria-label="예시 검색어"></div>
+      </section>
+
+      <section class="results-section" aria-live="polite" aria-busy="false">
+        <div class="results-header">
+          <div>
+            <p class="eyebrow">SEARCH RESULT</p>
+            <h2 id="result-summary">검색어를 입력해 결과를 확인하세요</h2>
+          </div>
+          <span id="took"></span>
+        </div>
+        <div id="query-tools" class="query-tools" hidden>
+          <button id="query-toggle" class="query-toggle" type="button" aria-expanded="false" aria-controls="query-panel">
+            검색 쿼리 보기
+          </button>
+        </div>
+        <section id="query-panel" class="query-panel" aria-label="실행된 Elasticsearch 검색 쿼리" hidden>
+          <div class="query-panel-header">
+            <span>실행된 Search API</span>
+            <code id="query-path"></code>
+          </div>
+          <pre><code id="query-code"></code></pre>
+        </section>
+        <div id="message" class="message initial">
+          <strong>검색 기능 준비 완료</strong>
+          <span>위 검색창에서 자신의 데이터가 의도대로 노출되는지 확인하세요.</span>
+        </div>
+        <div id="result-list" class="result-grid"></div>
+      </section>
+    </main>
+
+    <footer>Elasticsearch 5일 PBL · 로컬 검색 데모 템플릿</footer>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

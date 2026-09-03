@@ -25,8 +25,8 @@
 - 판정 근거: Data View·time field·field 구성은 전부 정상이다. 문서 수만 교재 기준(20,000)과
   다르다. `GET /products/_count`가 10,000을 돌려주므로 화면이 틀린 게 아니라 적재된
   데이터가 10,000건이다. 강사님께 20,000건 데이터를 따로 받는지 확인이 필요해 보류로 뒀다.
-- 캡처 파일: `picture/p01-q01-dataview.png` (Data View 상세),
-  `picture/p01-q01-discover-10000.png` (Discover 10,000건)
+- 캡처 파일: `picture/dataview.png` (Data View 상세),
+  `picture/discover-all.png` (Discover 10,000건)
 
 **Data View가 없어서 먼저 만들었다.** Saved Objects를 확인하니 `flights*` 하나뿐이라
 Discover에서 `products`를 열 수가 없었다. index pattern `products`, time field
@@ -60,7 +60,7 @@ Discover에서 `products`를 열 수가 없었다. index pattern `products`, tim
 - `in_stock` 값 확인: 화면에 나온 문서가 전부 `in_stock false`다. `true` 문서는 8,469건으로
   따로 세었고 1,531 + 8,469 = 10,000으로 맞는다.
 - 복구 성공 여부: 성공. KQL을 지우니 10,000으로 돌아왔다.
-- 캡처 파일: `picture/p01-q02-kql-instock-false.png`
+- 캡처 파일: `picture/discover-kql.png`
   (Data view `쇼핑몰 상품 데이터`, KQL `in_stock : false`, Documents 1,531 표시)
 - KQL이 데이터를 삭제한 것인가? 이유: **아니다.** KQL은 조회 조건일 뿐이고 index를 건드리지
   않는다. 근거는 두 가지다. 첫째, 조건을 지우자 10,000으로 그대로 복구됐다. 삭제였다면
@@ -84,14 +84,14 @@ Discover에서 `products`를 열 수가 없었다. index pattern `products`, tim
 - 마지막 정상 상태: 절대 범위 2025-08-01 ~ 2026-09-01, KQL·filter 없음, 10,000건.
 - 확인한 항목과 순서:
   1. **시간 범위** — `Last 15 minutes`. `created_at` 최대값이 2026-08-26이라 최근 15분에
-     들어오는 문서가 없다. 여기서 원인이 잡혔다. (`p01-q03-time-15m-zero.png`)
+     들어오는 문서가 없다. 여기서 원인이 잡혔다. (`discover-time-0.png`)
   2. Data View — `products` 맞음. index pattern도 맞음.
   3. KQL — 비어 있음.
   4. filter pill — 없음.
   5. field 존재 — `_mapping`으로 `created_at`이 date인 것 확인.
 - 발견한 원인: **시간 범위.** index가 지워진 게 아니었다. `Last 1 year`로도 부족했던 이유는
   데이터가 딱 1년치(2025-08-27 ~ 2026-08-26)라 now-1y 경계에서 앞쪽 196건이 잘리기 때문이다.
-  (`p01-q03-time-1y-partial.png`)
+  (`discover-time-1y.png`)
 - 수정한 내용: 절대 범위 2025-08-01 00:00 ~ 2026-09-01 00:00으로 변경.
 - 수정 후 문서 수: **10,000**
 - 다음부터 먼저 확인할 항목: **시간 범위**를 제일 먼저 본다. 0건이 나오면 index가
@@ -101,9 +101,9 @@ Discover에서 `products`를 열 수가 없었다. index pattern `products`, tim
   조건이 걸리는 자리가 여러 곳이라는 것도 같이 기억해야 한다. 5교시 문제 3에서는 KQL을
   안 지운 채 filter를 추가해 값이 틀어진 사고가 났다. 시간 범위·Data View·KQL·filter
   알약·Control이 각각 다른 줄에 있어서, 한 곳만 보면 나머지를 놓친다.
-- 캡처 파일: `picture/p01-q03-time-15m-zero.png` (0건),
-  `picture/p01-q03-time-1y-partial.png` (9,804건),
-  `picture/p01-q01-discover-10000.png` (복구 후 10,000건)
+- 캡처 파일: `picture/discover-time-0.png` (0건),
+  `picture/discover-time-1y.png` (9,804건),
+  `picture/discover-all.png` (복구 후 10,000건)
 
 ## (개인·필수) 문제 4 — 내 데이터 준비 상태 카드
 

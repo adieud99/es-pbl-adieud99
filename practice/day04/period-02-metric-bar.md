@@ -7,7 +7,7 @@
 
 ### 결과 입력
 
-- Dashboard 이름: `수업` (공통 실습용)
+- Dashboard 이름: `D4 공통 상품 Dashboard - adieud99`
 - 사용한 계산: `Count of records`
 - 실제 Metric 값: **10,000**
 - 시간 범위: 2025-08-01 00:00 ~ 2026-09-01 00:00 (절대 범위)
@@ -15,7 +15,7 @@
 - 정상/보류/오류와 이유: **보류.** 계산 방식과 설정은 맞지만 값이 교재 기준 20,000이
   아니다. `GET /products/_count`도 10,000을 돌려주므로 패널이 틀린 게 아니라 적재 데이터가
   10,000건이다.
-- 캡처 파일: `evidence/day-04/common-dashboard.png`
+- 캡처 파일: `picture/products.png`
 
 **여기서 한 번 틀렸다.** 처음에 시간 범위를 `Last 1 year`로 두고 캡처했더니 Metric이
 **9,818**로 나왔다. `created_at`이 정확히 1년치라 now-1y 경계에서 앞쪽 문서가 잘린
@@ -48,7 +48,7 @@
   8 × 1,250 = 10,000으로 Metric과 맞는다. 남거나 모자란 문서가 없으므로 Top 8이
   전부를 덮었다는 뜻이다.
 
-- 캡처 파일: `evidence/day-04/common-dashboard.png`
+- 캡처 파일: `picture/products.png`
 
 막대 높이가 전부 같아서 처음엔 설정이 잘못된 줄 알았는데, 집계로 확인하니 실제로
 균등하게 생성된 데이터였다. 차트가 밋밋한 게 오류가 아니라 데이터의 성질이다.
@@ -95,9 +95,9 @@
   `products.category`는 keyword라 서브필드 없이 바로 집계되는데, `name`처럼 text인 field를
   잘못 고르면 아예 집계가 안 된다.
 - 캡처 파일: Dashboard 진단 캡처는 없다(공통 Dashboard 미저장, 5교시 문제 4 참고).
-  Discover 단계의 같은 진단은 `picture/p01-q03-time-15m-zero.png`·`p01-q03-time-1y-partial.png`,
-  개인 Dashboard의 조건별 상태는 `picture/p05-q03-baseline.png`,
-  `picture/p05-q03-kql.png`, `picture/p05-q03-filter.png`에 있다.
+  Discover 단계의 같은 진단은 `picture/discover-time-0.png`·`discover-time-1y.png`,
+  개인 Dashboard의 조건별 상태는 `picture/flights.png`,
+  `picture/flights-kql.png`, `picture/flights-filter.png`에 있다.
 
 Control·filter·KQL 세 가지가 겉으로 비슷하게 보여서, 값이 이상할 때 어디를 봐야 할지
 순서를 정해두는 게 중요하다. 5교시 문제 3에서 셋을 나눠서 다시 확인한다.

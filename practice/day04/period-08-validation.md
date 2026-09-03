@@ -26,9 +26,9 @@
 
 | 파일 | 상태 |
 |---|---|
-| `picture/p05-q03-baseline.png` | 조건 없음, Metric 10,000 |
+| `picture/flights.png` | 조건 없음, Metric 10,000 |
 | `evidence/day-04/personal-dashboard-filtered.png` | 행동 1 — Control 진에어, 2,063 |
-| `picture/p08-q01-action2-sin.png` | 행동 2 — filter `arr_airport: SIN`, 1,691 |
+| `picture/flights-sin.png` | 행동 2 — filter `arr_airport: SIN`, 1,691 |
 
   행동 2의 1,691은 `GET /flights/_count`에 `term arr_airport:SIN`을 걸어 대조했고 일치한다.
 
@@ -60,7 +60,7 @@
 | 대한항공 | 19.17% | 1,917 / 10,000 |
 
 - 비교에 사용한 요청 파일 또는 Discover 캡처: 아래 요청과 캡처 세 장
-  (`picture/p05-q03-baseline.png`, `picture/p05-q03-kql.png`, `picture/p05-q03-filter.png`).
+  (`picture/flights.png`, `picture/flights-kql.png`, `picture/flights-filter.png`).
 
 ```http
 GET /flights/_count
@@ -167,13 +167,14 @@ GET /flights/_search
 - JSON export 경로(선택): 미제출
 - `dashboard-plan.md` 경로: `evidence/day-04/dashboard-plan.md`
 - `dashboard-review.md` 경로: `evidence/day-04/dashboard-review.md`
-- 개인 저장소 commit SHA: `fefdfd8` (evidence·캡처), 이 문서 포함 커밋은 별도
+- 개인 저장소 commit SHA: `fefdfd8`(evidence·캡처), `cbc3e70`(연습문제 8교시),
+  `99a64ba`(실행 결과 반영), `f8c5fba`(Data View·Discover 캡처). 이 문서 포함 커밋은 별도
 - 미완료 또는 알려진 제한 사항:
 
 | 항목 | 상태 |
 |---|---|
 | `products` 건수 | 교재 20,000 기준인데 클러스터에는 10,000. 배포 파일이 `products-10000.ndjson` |
-| `common-dashboard.png` | 화면이 997건 상태. 필터 줄이 잘려 원인 미확인 |
+| `common-dashboard.png` | 재작성 완료. 저장된 Dashboard에서 다시 캡처(10,000건) |
 | Dashboard 제목 오타 | `fligths` → `flights` |
 | 숙박일수 Bar | terms size 9라 `Other` 칸 발생. 고유값은 10개 |
 | 숙박일수 Bar y축 라벨 | `도착지`로 남아 있음 |

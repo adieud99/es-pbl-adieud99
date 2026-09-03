@@ -18,7 +18,7 @@
 | 2 | 냥이마켓 | 272 | 116,968 |
 | 3 | MobiCore | 271 | 231,226 |
 
-- 캡처 파일: `evidence/day-04/common-dashboard.png`
+- 캡처 파일: `picture/products.png`
 
 **Number of values를 40으로 올린 이유가 있다.** 처음에 기본값 5로 두니 1위가 MobiCore
 271로 나왔는데, 40으로 올리니 한끼연구소 277이 1위였다. `terms` 집계는 샤드마다 상위 N개만
