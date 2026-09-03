@@ -8,7 +8,7 @@
 | 행동 | 시작 상태 | 적용 조건 | 변한 패널·값 | 사용자의 판단 | 복구 방법 | 복구 성공 |
 |---|---|---|---|---|---|---|
 | 1 | 전체 10,000, Control `Any` | Control = `진에어` | Metric 10,000→**2,063**, Donut 5분할→**진에어 100%**, 도착지 Bar SIN 1,691→**375**, Table 셀 5→**1**, Tag cloud SIN 부각, Heatmap 5행→**1행** | 진에어 물량이 전체의 20.6%다. 노선별로는 SIN 375가 가장 많고 TPE 327이 가장 적으므로, 타이베이 좌석을 추가 요청한다 | 드롭다운 `Any` | O (10,000) |
-| 2 | 전체 10,000 | 도착지 Bar에서 `SIN` 막대 클릭 → filter pill 생성 | Metric 10,000→**1,691**, Donut이 SIN 노선 항공사 구성으로, Table이 SIN만 남음 | 싱가포르 노선에 1,691개를 확보했다. 6개 노선 중 1위지만 NRT 1,690과 1건 차이라 사실상 동률이다. 특정 노선에 쏠려 있지 않다 | filter pill `×` | O (10,000) |
+| 2 | 전체 10,000 | 도착지 Bar에서 `SIN` 막대 클릭 → filter pill `arr_airport: SIN` 생성 | Metric 10,000→**1,691**, Donut이 SIN 노선 항공사 구성으로, Table이 SIN 열만 남음 | 싱가포르 노선에 1,691개를 확보했다. 6개 노선 중 1위지만 NRT 1,690과 1건 차이라 사실상 동률이다. 특정 노선에 쏠려 있지 않다 | filter pill `×` | O (10,000) |
 
 - 두 행동이 서로 다른 이유: **행동 1은 공급자 축, 행동 2는 노선 축**이다. 1은 "이 항공사가
   뭘 갖고 있나"를 묻고 2는 "이 노선을 누가 채우나"를 묻는다. 조작 방법도 다르다. 1은
@@ -22,8 +22,15 @@
   3. **히트맵 색이 필터마다 다시 계산된다.** 전후 캡처에서 같은 빨강인데 기준값이
      331.8과 346.2로 다르다.
 
-- 캡처 파일: `evidence/day-04/personal-dashboard.png`,
-  `evidence/day-04/personal-dashboard-filtered.png`
+- 캡처 파일:
+
+| 파일 | 상태 |
+|---|---|
+| `picture/p05-q03-baseline.png` | 조건 없음, Metric 10,000 |
+| `evidence/day-04/personal-dashboard-filtered.png` | 행동 1 — Control 진에어, 2,063 |
+| `picture/p08-q01-action2-sin.png` | 행동 2 — filter `arr_airport: SIN`, 1,691 |
+
+  행동 2의 1,691은 `GET /flights/_count`에 `term arr_airport:SIN`을 걸어 대조했고 일치한다.
 
 ## (개인·필수) 문제 2 — 핵심값 3개 교차 검증
 
@@ -52,7 +59,7 @@
 | 티웨이항공 | 19.93% | 1,993 / 10,000 |
 | 대한항공 | 19.17% | 1,917 / 10,000 |
 
-- 비교에 사용한 요청 파일 또는 Discover 캡처:
+- 비교에 사용한 요청 파일 또는 Discover 캡처: 아래 요청과 `picture/p05-q03-*.png` 세 장.
 
 ```http
 GET /flights/_count

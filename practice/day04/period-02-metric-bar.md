@@ -94,7 +94,8 @@
   이상하거나, `category` 대신 `category.keyword` 같은 다른 field를 잡았을 수 있다. 실제로
   `products.category`는 keyword라 서브필드 없이 바로 집계되는데, `name`처럼 text인 field를
   잘못 고르면 아예 집계가 안 된다.
-- 캡처 파일: 별도 캡처 없음.
+- 캡처 파일: `products` 화면 캡처는 없다. 같은 진단을 개인 index에서 한 결과가
+  `picture/p05-q03-baseline.png`·`p05-q03-filter.png`에 있다.
 
 Control·filter·KQL 세 가지가 겉으로 비슷하게 보여서, 값이 이상할 때 어디를 봐야 할지
 순서를 정해두는 게 중요하다. 5교시 문제 3에서 셋을 나눠서 다시 확인한다.
