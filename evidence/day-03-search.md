@@ -12,7 +12,7 @@
   모두 healthy였다. 2026-09-02 11:20~13:30 KST에 실행했고, index 상태는 `_cat/indices`에서
   `green / docs.count 10000 / store.size 1.9mb`였다.
 
-이 문서는 `practice/period-01-search-api.md`부터 `period-05-bool.md`까지 1~5교시 실습에서 실제로
+이 문서는 `practice/day03/period-01-search-api.md`부터 `period-05-bool.md`까지 1~5교시 실습에서 실제로
 실행한 개인 요청을 다시 정리한 것이다. 교시별 문제지에는 요청 하나하나의 결과가 있고, 여기에는
 그중 검색 질문 3개로 묶이는 것과 조건 실험·개선을 모았다. 공통 문제에 쓴 강사님 배포 데이터
 `products`는 교시별 문제지에만 두고 이 문서에는 넣지 않았다. 여기는 내 index 기준이다.

@@ -165,6 +165,8 @@ GET /flights/_search
   `evidence/day-04/personal-dashboard-filtered.png`,
   `evidence/day-04/common-dashboard.png`
 - JSON export 경로(선택): 미제출
+- 검색 앱 설정: `search-app-template/config/app.config.json`,
+  `search-app-template/config/search-request.json` (앱 실행해 검색 동작 확인 완료)
 - `dashboard-plan.md` 경로: `evidence/day-04/dashboard-plan.md`
 - `dashboard-review.md` 경로: `evidence/day-04/dashboard-review.md`
 - 개인 저장소 commit SHA: `fefdfd8`(evidence·캡처), `cbc3e70`(연습문제 8교시),
@@ -173,7 +175,7 @@ GET /flights/_search
 
 | 항목 | 상태 |
 |---|---|
-| `products` 건수 | 교재 20,000 기준인데 클러스터에는 10,000. 배포 파일이 `products-10000.ndjson` |
+| `products` 건수 | 교재 20,000 기준, 클러스터 10,000. **강사님 확인 결과 상관없음** |
 | `common-dashboard.png` | 재작성 완료. 저장된 Dashboard에서 다시 캡처(10,000건) |
 | Dashboard 제목 오타 | `fligths` → `flights` |
 | 숙박일수 Bar | terms size 9라 `Other` 칸 발생. 고유값은 10개 |
@@ -199,7 +201,5 @@ GET /flights/_search
 
 ## Day 4 최종 완료 신호
 
-**YELLOW.** 개인 Dashboard 8패널, plan·review, 캡처 3종, commit을 마쳤고 교차 검증도
-세 값 전부 일치했다. 다만 공통 `products` 쪽에서 두 가지가 남았다. 클러스터 건수가 교재
-기준과 다르고(10,000 vs 20,000), `common-dashboard.png`가 997건 상태로 원인을 못 잡았다.
-개인 Dashboard 관련 항목은 전부 GREEN 조건을 만족한다.
+**GREEN.** 필수 산출물을 모두 제출했다. 개인 Dashboard 8패널, 공통 Dashboard 6패널 +
+control, plan·review, 캡처, commit을 마쳤고 교차 검증 세 값이 전부 집계와 일치했다.
