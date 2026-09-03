@@ -141,14 +141,19 @@ GET /api/saved_objects/_find?type=index-pattern → 총 1개 (flights*)
 GET /api/saved_objects/_find?type=lens        → 총 0개
 ```
 
-- 남아 있는 Dashboard: `fligths dashboards` (개인 flights) 하나뿐
-- 남아 있는 Data View: `flights*` 하나뿐
-- **`products` Data View도, 공통 Dashboard도, 저장된 Lens도 없다.**
+- 확인 당시 남아 있던 Dashboard: `fligths dashboards` (개인 flights) 하나뿐
+- 확인 당시 남아 있던 Data View: `flights*` 하나뿐
+- **`products` Data View도, 공통 Dashboard도, 저장된 Lens도 없었다.**
 
 공통 실습은 편집 모드에서 화면만 만들고 저장 없이 끝난 것으로 보인다. 캡처
 (`evidence/day-04/common-dashboard.png`)는 그때 찍은 화면이라 값이 남아 있지만, 그 화면을
 다시 열어 확인할 방법이 없다. 그래서 그 캡처의 997건이 어떤 조건에서 나온 값인지
-지금은 확인할 수 없다.
+지금도 확인하지 못했다.
+
+**이후 조치.** 1교시 실습을 마저 하려고 Data View `쇼핑몰 상품 데이터`
+(index pattern `products`, time field `created_at`)를 새로 만들었다. 이제 Discover에서
+`products`를 열 수 있고, 1교시 문제 1~3의 캡처는 이 Data View로 다시 찍은 것이다.
+Dashboard는 아직 저장하지 않았다.
 
 - 다시 열었을 때 달라진 항목: 해당 없음
 

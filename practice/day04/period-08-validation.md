@@ -59,7 +59,8 @@
 | 티웨이항공 | 19.93% | 1,993 / 10,000 |
 | 대한항공 | 19.17% | 1,917 / 10,000 |
 
-- 비교에 사용한 요청 파일 또는 Discover 캡처: 아래 요청과 `picture/p05-q03-*.png` 세 장.
+- 비교에 사용한 요청 파일 또는 Discover 캡처: 아래 요청과 캡처 세 장
+  (`picture/p05-q03-baseline.png`, `picture/p05-q03-kql.png`, `picture/p05-q03-filter.png`).
 
 ```http
 GET /flights/_count

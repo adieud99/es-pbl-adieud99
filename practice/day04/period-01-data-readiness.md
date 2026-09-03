@@ -11,7 +11,7 @@
 
 ### 결과 입력
 
-- 선택한 Data View 이름: `products`
+- 선택한 Data View 이름: **`쇼핑몰 상품 데이터`** (Kibana에 없어서 새로 만들었다)
 - index pattern: `products`
 - time field: `created_at`
 - 확인한 7개 field: `product_id`(keyword), `name`(text+keyword), `category`(keyword),
@@ -25,7 +25,16 @@
 - 판정 근거: Data View·time field·field 구성은 전부 정상이다. 문서 수만 교재 기준(20,000)과
   다르다. `GET /products/_count`가 10,000을 돌려주므로 화면이 틀린 게 아니라 적재된
   데이터가 10,000건이다. 강사님께 20,000건 데이터를 따로 받는지 확인이 필요해 보류로 뒀다.
-- 캡처 파일: `evidence/day-04/common-dashboard.png`
+- 캡처 파일: `picture/p01-q01-dataview.png` (Data View 상세),
+  `picture/p01-q01-discover-10000.png` (Discover 10,000건)
+
+**Data View가 없어서 먼저 만들었다.** Saved Objects를 확인하니 `flights*` 하나뿐이라
+Discover에서 `products`를 열 수가 없었다. index pattern `products`, time field
+`created_at`으로 만들고 기본값으로 지정했다. Fields는 18개로 잡힌다.
+
+```
+실제 mapping 12 + name.keyword 1 + 메타 5(_id·_ignored·_index·_score·_source) = 18
+```
 
 **시간 범위 주의.** 기본값 `Last 15 minutes`로 두면 0건이 나온다. `Last 1 year`도 안 된다.
 데이터가 정확히 1년치라 now-1y 이전 문서 193건이 잘려 9,807건만 보인다. 절대 범위로
@@ -39,13 +48,20 @@
 |---|---:|---:|---:|
 | 문서 수 | 10,000 | **1,531** | 10,000 |
 
-- 적용 후 대표 문서 ID 2개: `_count` + `term in_stock:false`로 1,531건을 확인했다.
-  Discover에서 상위 2건의 `product_id`를 읽어 적는다.
-- `in_stock` 값 확인: 반환된 문서의 `in_stock`이 모두 `false`다. `true` 문서는 8,469건으로
+- 적용 후 대표 문서 ID 2개: Discover 화면 상위 2건이다.
+
+| product_id | brand | category | price | in_stock |
+|---|---|---|---:|---|
+| `P-09974` | MildLeaf | 뷰티 | 57,900 | false |
+| `P-09968` | HappyTail | 반려동물 | 98,400 | false |
+
+  두 건을 `ids` 쿼리로 다시 조회해 `in_stock`이 실제로 `false`인 것을 확인했다.
+
+- `in_stock` 값 확인: 화면에 나온 문서가 전부 `in_stock false`다. `true` 문서는 8,469건으로
   따로 세었고 1,531 + 8,469 = 10,000으로 맞는다.
 - 복구 성공 여부: 성공. KQL을 지우니 10,000으로 돌아왔다.
-- 캡처 파일: `products` 화면 캡처는 없다. `_count` 비교로 대신했다. 개인 index의 같은
-  동작은 `picture/p05-q03-kql.png`(KQL 적용)와 `picture/p05-q03-baseline.png`(해제 후)에 있다.
+- 캡처 파일: `picture/p01-q02-kql-instock-false.png`
+  (Data view `쇼핑몰 상품 데이터`, KQL `in_stock : false`, Documents 1,531 표시)
 - KQL이 데이터를 삭제한 것인가? 이유: **아니다.** KQL은 조회 조건일 뿐이고 index를 건드리지
   않는다. 근거는 두 가지다. 첫째, 조건을 지우자 10,000으로 그대로 복구됐다. 삭제였다면
   돌아올 수 없다. 둘째, `in_stock:false` 1,531건과 `true` 8,469건을 각각 세면 합이 원래
@@ -55,18 +71,27 @@
 
 ### 진단 기록
 
-- 재현한 증상: 시간 범위를 기본값 `Last 15 minutes`로 둔 상태에서 Discover가 **0건**을
-  보여줬다. 그다음 `Last 1 year`로 바꾸니 **9,807건**이 나와 전체(10,000)보다 193건 적었다.
+- 재현한 증상: 두 가지를 실제로 재현하고 캡처했다.
+
+| 시간 범위 | Discover | `_count` 대조 |
+|---|---:|---:|
+| `Last 15 minutes` | **0건** | 0 |
+| `Last 1 year` | **9,804건** | 9,804 |
+| 절대 범위 2025-08-01 ~ 2026-09-01 | **10,000건** | 10,000 |
+
+  `Last 1 year`는 실행 시각에 따라 조금씩 달라진다. 앞서 캡처한 대시보드에서는 9,818,
+  이번 측정에서는 9,804였다. now가 흘러가면서 잘리는 문서가 늘기 때문이다.
 - 마지막 정상 상태: 절대 범위 2025-08-01 ~ 2026-09-01, KQL·filter 없음, 10,000건.
 - 확인한 항목과 순서:
   1. **시간 범위** — `Last 15 minutes`. `created_at` 최대값이 2026-08-26이라 최근 15분에
-     들어오는 문서가 없다. 여기서 원인이 잡혔다.
+     들어오는 문서가 없다. 여기서 원인이 잡혔다. (`p01-q03-time-15m-zero.png`)
   2. Data View — `products` 맞음. index pattern도 맞음.
   3. KQL — 비어 있음.
   4. filter pill — 없음.
   5. field 존재 — `_mapping`으로 `created_at`이 date인 것 확인.
 - 발견한 원인: **시간 범위.** index가 지워진 게 아니었다. `Last 1 year`로도 부족했던 이유는
-  데이터가 딱 1년치(2025-08-27 ~ 2026-08-26)라 now-1y 경계에서 앞쪽 193건이 잘리기 때문이다.
+  데이터가 딱 1년치(2025-08-27 ~ 2026-08-26)라 now-1y 경계에서 앞쪽 196건이 잘리기 때문이다.
+  (`p01-q03-time-1y-partial.png`)
 - 수정한 내용: 절대 범위 2025-08-01 00:00 ~ 2026-09-01 00:00으로 변경.
 - 수정 후 문서 수: **10,000**
 - 다음부터 먼저 확인할 항목: **시간 범위**를 제일 먼저 본다. 0건이 나오면 index가
@@ -76,8 +101,9 @@
   조건이 걸리는 자리가 여러 곳이라는 것도 같이 기억해야 한다. 5교시 문제 3에서는 KQL을
   안 지운 채 filter를 추가해 값이 틀어진 사고가 났다. 시간 범위·Data View·KQL·filter
   알약·Control이 각각 다른 줄에 있어서, 한 곳만 보면 나머지를 놓친다.
-- 캡처 파일: 별도 캡처 없음. 같은 진단을 개인 index에서 한 결과가
-  `picture/p05-q03-baseline.png`에 있다.
+- 캡처 파일: `picture/p01-q03-time-15m-zero.png` (0건),
+  `picture/p01-q03-time-1y-partial.png` (9,804건),
+  `picture/p01-q01-discover-10000.png` (복구 후 10,000건)
 
 ## (개인·필수) 문제 4 — 내 데이터 준비 상태 카드
 
